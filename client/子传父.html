@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>子传父</title>
+</head>
+
+<body>
+    <div id="app">
+        {{msg}}
+        <!-- 此处最好用kebab-case写法动态绑定属性 -->
+        <!-- 订阅change-msg自定义事件，things可以理解为这个事件的回调 -->
+        <child :child-msg="msg" @change-msg="things"></child>
+    </div>
+</body>
+<script src="../node_modules/axios/dist/axios.js"></script>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<script>
+    let vm = new Vue({
+        el: '#app',
+        data: {
+            msg: '520'
+        },
+        methods: {
+            things(val) {
+                this.msg = val;
+            }
+        },
+        components: {
+            'child': {
+                props: ['child-msg'],
+                template: '<div>{{childMsg}}<button @click="changeMoney">点我啊</button></div>',
+                methods: {
+                    changeMoney() {
+                        this.$emit('change-msg', 1024); //发布change-msg事件
+                    }
+                }
+            }
+        }
+    })
+</script>
+
+</html>

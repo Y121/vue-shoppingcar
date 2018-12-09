@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <script src="../node_modules/axios/dist/axios.js"></script>
+    <script src="../node_modules/vue/dist/vue.js"></script>
+
+</head>
+
+<body>
+    <div class="container" id="app">
+        <div class="row">
+            <table class="table table-responsive table-hover">
+                <caption class="h2 text-center text-info">购物车详情</caption>
+                <tr>
+                    <th class="col-md-1"><input type="checkbox" v-model="checkBoll" />全选</th>
+                    <th class="col-md-6">商品</th>
+                    <th class="col-md-2 text-danger">单价</th>
+                    <th class="col-md-1">数量</th>
+                    <th class="col-md-1">小计</th>
+                    <th class="col-md-1 text-danger">操作</th>
+                </tr>
+                <tr v-for="(product,index) in products">
+                    <td class="col-md-1"><input type="checkbox" v-model="product.isSelected" /></td>
+                    <td class="col-md-6">
+                        <img :src="product.imgSrc" :alt="product.productName" class="col-md-3"/>
+                        <span class="col-md-5">{{product.productName}}</span>
+                        <span class="col-md-4">{{product.productDesc}}</span>
+                    </td>
+                    <td class="text-danger col-md-2">{{product.productPrice}}</td>
+                    <td class="col-md-1"><input type="number" v-model.number.lazy="product.productCount" min="1"/></td>
+                    <td class="text-danger col-md-1">{{product.productPrice*product.productCount | toFixed(2)}}</td>
+                    <td class="col-md-1"><button class="btn-danger" @click="deleteItem(product)">删除</button></td>
+                </tr>
+                <tr>
+                   <td colspan="6">总价：{{sum}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            "products": [],
+            //"checkBoll":false
+        },
+        created() {//初始化钩子函数
+            this.initData();
+        },
+        filters:{//过滤器
+            toFixed(val,param1){
+                return '$'+val.toFixed(param1);
+            }
+        },
+        //全选单选既可以用方法实现，也可以用计算属性。
+        computed:{
+            checkBoll:{
+                get(){
+                    return this.products.every((item)=>item.isSelected );
+                },
+                set(val){
+                    this.products.forEach((item,index) => item.isSelected = val);
+                }
+            },
+            //求总价为什么用计算属性而不用方法，这样子可以提高性能，因为computed只有当依赖项改变时才会重新计算
+            sum(){//默认是get方法
+                var result = this.products.reduce((prev,next)=>{
+                    if(!next.isSelected) return prev;
+                    return prev+next.productPrice*next.productCount;
+                },0);
+                return result;
+            }
+        },
+        methods: {
+            initData() {//初始化函数
+                var _this = this;
+                axios.get('cart.json').then(function(response) {
+                    _this.products = response.data;
+                }).catch(function(error) {
+                    console.log(error);
+                })
+            },
+            checkAll(){//全选
+                this.products.forEach((item,index) => item.isSelected = this.checkBoll);
+            },
+            checkOne(){//单选
+                //只有当所有的单选都为true时才会是全选
+                this.products.every((item)=>this.checkBoll=item.isSelected );
+            },
+            deleteItem(val){//删除
+                //filters是为了去掉不要的值。循环如果返回的是false则不添加这个值，返回true则添加这值
+                this.products = this.products.filter((item)=>val!=item)
+            },
+            // sum(){
+            //     var result = this.products.reduce((prev,next)=>{
+            //         if(!next.isSelected) return prev;
+            //         return prev+next.productPrice*next.productCount;
+            //     },0);
+            //     return result;
+            // }
+        }
+    })
+</script>
+
+</html>

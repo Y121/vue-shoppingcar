@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>发布订阅</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    //{"做运动",[篮球，羽毛球，乒乓球]}
+    //发布 emit 订阅 on{}
+    function Sports() {
+        this._events = {};
+    }
+
+    Sports.prototype.on = function(eventName, callback) { //事件名and回调
+        if (this._events[eventName]) {
+            this._events[eventName].push(callback);
+        } else {
+            this._events[eventName] = [callback]; //第一次调用
+        }
+    };
+    Sports.prototype.emit = function(eventName, ...rest) { //此处是做剩余运算符，有多个参数[...[1,2,3]]
+        //[].slice.call(arguments,1);//取除第一个以外的所有参数
+        //Array.from(arguments).slice(1);
+        if (this._events[eventName]) {
+            this._events[eventName].forEach(cb => {
+                cb(...rest); //此处是扩展运算符 ...[1,2,3]
+            });
+        }
+    }
+    let sports = new Sports();
+    //理解为多次订阅
+    let bak = (who, ni) => {
+        console.log(who + "和" + ni + "打篮球");
+    };
+    let teniess = (who) => {
+        console.log(who + "打羽毛球");
+    };
+    let pingpang = (who) => {
+        console.log(who + "打乒乓球");
+    };
+    //订阅事件
+    sports.on('aaa', bak);
+    sports.on('aaa', teniess);
+    sports.on('aaa', pingpang);
+    //发布事件
+    sports.emit('aaa', 'me', 'ni');
+</script>
+
+</html>

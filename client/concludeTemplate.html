@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件嵌套</title>
+</head>
+<body>
+    <div id="app">
+        <parent></parent>
+    </div>
+</body>
+<script src="../node_modules/axios/dist/axios.js"></script>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<script>
+    <!--父套子，子套孙-->
+    //每个组件又是一个独立的作用域，method,watch,components等方法都有，
+    let son = {template:'<div>son</div>'};
+    let vm = new Vue({
+        el:'#app',
+        components:{
+            parent:{//父组件
+                template:`<div>我是父亲<childer-component></childer-component></div>`,
+                components:{//父组件里面还有一个子组件
+                    'childer-component':{//子组件
+                        template:'<div>我是儿子<son-component></son-component></div>',
+                        components:{//子组件里面还有一个组件
+                            'son-component':son//孙组件
+
+                        }
+                    },
+                }
+            }
+        }
+    })
+</script>
+</html>
