@@ -2,9 +2,71 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>vue slot</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <script src="../node_modules/axios/dist/axios.js"></script>
+    <script src="../node_modules/vue/dist/vue.js"></script>
 </head>
 <body>
+    <div id="app">
+        <!--组件循环，必须要有key值-->
+        <child :type="item.type" v-for="(item,index) in articles" :key="index">
+            <h2 slot="title">{{item.title}}</h2>
+            <div slot="content">
+                {{item.content}}
+            </div>
+            <div v-if="item.author">authur:{{item.author}}</div>
+        </child>
 
+    </div>
+    <template id="child">
+        <div class="panel" :class="[color]">
+            <!--命名模板-->
+            <div class="panel-heading" ref="content"><slot name="title"></slot></div>
+            <div class="panel-body"><slot name="content"></slot></div>
+            <!--默认模板，default-->
+            <div class="panel-footer"><slot>zuozheshiwo </slot></div>
+        </div>
+    </template>
 </body>
+<script>
+    <!--实现功能：1.slot。2.父组件传子组件参数。3.组件循环-->
+    //ps：如果父子组件里面都执行mounted，子组件的mounted会比父组件的先执行。所以如果父组件需要用到子组件的数据，最好先nextTick
+    //$nextTick
+    //<keep-alive></keep-alive> 可以使被包含的组件保留状态，或避免重新渲染。
+    let child = {
+        computed:{
+           color(){
+               return "panel-"+this.type;
+           }
+        },
+        mounted(){
+            console.log(this.$refs.content.innerText);//ref写在slot上没用
+        },
+        props:{//props验证
+            type:{
+                type:[String],//字符串格式，数组表示可以传多种格式
+                default:"default"//默认type为default
+            }
+        },
+        template:'#child',
+
+    };
+    let vm = new Vue({
+        el:'#app',
+        mounted(){
+
+        },
+        data:{
+            articles:[
+                {title:'vue',content:'study vue',author:'aaa',type:''},
+                {title:'react',content:'study react',author:'bbb',type:'primary'},
+                {title:'angular',content:'study angular',author:'',type:'success'}
+            ]
+        },
+        components:{
+            child:child
+        }
+    })
+</script>
 </html>
