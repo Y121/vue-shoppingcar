@@ -17,6 +17,7 @@
 <script src="../node_modules/axios/dist/axios.js"></script>
 <script src="../node_modules/vue/dist/vue.js"></script>
 <script>
+    //子组件是不能直接改变父组件的数据的，因为这是单向流的，只能通知父组件改数据然后再改变子组件的数据。
     let vm = new Vue({
         el: '#app',
         data: {
