@@ -31,8 +31,13 @@
 </body>
 <script>
     <!--实现功能：1.slot。2.父组件传子组件参数。3.组件循环-->
+
     //ps：如果父子组件里面都执行mounted，子组件的mounted会比父组件的先执行。所以如果父组件需要用到子组件的数据，最好先nextTick
+
     //$nextTick
+    // 在Vue生命周期的created()钩子函数进行的DOM操作一定要放在Vue.nextTick()的回调函数中。
+    // 在数据变化后要执行的某个操作，而这个操作需要使用随数据改变而改变的DOM结构的时候，这个操作都应该放进Vue.nextTick()的回调函数中。
+
     //<keep-alive></keep-alive> 可以使被包含的组件保留状态，或避免重新渲染。
     let child = {
         computed:{
