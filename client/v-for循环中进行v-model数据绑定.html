@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>v-for循环中进行v-model数据绑定</title>
+</head>
+<body>
+    <div id="app">
+        <ul>
+            <li v-for="(item,index) in a.cur">
+                <input type="text" v-model="a.cur[index]">
+            </li>
+        </ul>
+    </div>
+</body>
+<script src="../node_modules/axios/dist/axios.js"></script>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<script>
+    //有时候需要循环生成input，用v-model绑定后，利用vuejs操作它，
+    // 此时我们可以在v-model中写一个数组selected[$index]，
+    // 这样就可以给不同的input绑定不同的v-model，从而分别操作他们。
+
+
+    //没理解
+    let vm = new Vue({
+        el:'#app',
+        data:{
+            a:{
+                cur:["aaa","bbb","ccc"]
+            }
+        }
+    })
+</script>
+</html>
