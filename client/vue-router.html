@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        <!---->
+        .active{
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!--to是必须要有的属性-->
+        <router-link to="/home" tag="button">显示首页</router-link>
+        <router-link to="/details" tag="span">显示详情页</router-link>
+        <router-link to="/finalDD" tag="button">显示finalDD</router-link>
+        <router-view></router-view>
+    </div>
+    <template id="finalDD">
+        <div>
+            <div>这是个总的页面</div>
+            <router-link to="/finalDD/about">去about页面</router-link>
+            <router-view></router-view>
+        </div>
+    </template>
+</body>
+<script src="../node_modules/axios/dist/axios.js"></script>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<script src="../node_modules/vue-router/dist/vue-router.js"></script>
+<script>
+    let Home = {
+        template:'<div>首页<button @click="goList">去详情页</button></div>',
+        methods:{//$router下的都是方法  $route下的都是属性
+            goList(){
+               this.$router.push('/details');
+            }
+        }
+    };
+    let Details = {
+        template:'<div>详情页<button @click="goHome">去首页</button></div>',
+        methods:{//编程式路由
+            goHome(){
+                this.$router.go(-1);
+            }
+        }
+    };
+    let FinalDD = {
+        template:'#finalDD',
+    };
+    let About={
+        template:'<div>关于我们</div>'
+    };
+    //此处是命名式路由
+    let routes = [
+        {path:'',component:Home},//页面初始化进来的时候显示的组件
+        {path:'*',redirect:'/home'},//当输入路径不对的时候重定向到最初的组件
+        {path:'/home',component:Home},
+        {
+            path:'/details',
+            component:Details
+        },
+        {           //嵌套路由
+            path:"/finalDD", //    /是根路径，第一级路由必须带上根路径，子路由不要带/
+            component:FinalDD,
+            children:[
+                {path:'about',component:About}
+            ]
+        }
+    ];
+    let router = new VueRouter({
+        mode:'hash',//路由模式，有hash和history两种，开发的时候用hash，上线用history，因为hash不支持seo,history页面一刷新就会404
+        routes,
+        //当目标路由成功激活时，链接元素自动设置一个标识激活的CSS类名,默认是叫router-link-active,可以通过linkActiveClass改名。
+        linkActiveClass:'active'
+    });
+    let vm = new Vue({
+        //el:'#app',
+        router
+    }).$mount('#app');
+</script>
+</html>

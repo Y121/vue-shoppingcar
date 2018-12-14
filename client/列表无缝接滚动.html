@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+ </head>
+ <body>
+<div id="demo" style="overflow:hidden;height:80px;width:280px;">
+<ul id="demo1">  
+	<li><a href="/soft/4085.shtml" target="_blank">XP Menu 仿QQ菜单管理器左侧菜单</a></li>
+	<li><a href="/soft/5884.shtml" target="_blank">多层嵌套的一个层展开</a></li>
+	<li><a href="/soft/1852.shtml" target="_blank">《Java2核心技术卷2:高级特性》第7版</a></li>
+	<li><a href="/soft/1286.shtml" target="_blank">CSS、HTML教程打包下载 (CHM)</a></li>
+	<li><a href="/soft/4216.shtml" target="_blank">《C++ Primer》中文第四版 chm</a></li>
+	<li><a href="/soft/3388.shtml" target="_blank">C++工资管理系统(Access)</a></li>
+	<li><a href="/soft/2009.shtml" target="_blank">非常牛的左侧栏JS折叠菜单</a></li>
+</ul> 
+<div id="demo2"></div>
+</div> 
+<script> 
+     var speed=40; 
+     var demo=document.getElementById("demo"); 
+     var demo2=document.getElementById("demo2"); 
+     var demo1=document.getElementById("demo1");
+     demo2.innerHTML = demo1.innerHTML;  
+     var demoMaxOffsetTop = demo.scrollHeight-demo.offsetHeight;//demo的最大scrollTop
+     function Marquee(){
+      if(demoMaxOffsetTop - demo.scrollTop<=0) {   
+        demo.scrollTop-=demo1.offsetHeight;
+      }
+      else{ 
+        demo.scrollTop++;
+      } 
+     } 
+     var MyMar=setInterval(Marquee,speed); 
+     demo.onmouseover=function() {clearInterval(MyMar);} 
+     demo.onmouseout=function() {MyMar=setInterval(Marquee,speed);} 
+    </script> </body>
+</html>
